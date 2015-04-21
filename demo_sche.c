@@ -1,3 +1,5 @@
+/*COPYRIGHT (C) 2014 - 2020, piggy_xrh */
+
 #include <stdio.h>
 #include "stpool.h"
 
@@ -5,7 +7,6 @@
 #include <Windows.h>
 #pragma comment(lib, "stpool.lib")
 #define msleep Sleep
-#define random rand
 #else
 #define msleep(x) usleep(x * 1000)
 #endif
@@ -34,16 +35,7 @@ int main()
 	int i, c, times;
 	int sum, *arg;
 	HPOOL hp;
-	
-	/* We can set the global env here */
-#ifndef _WIN32
-	setenv("LIMIT_THREADS_FREE", "1", 1);
-	setenv("LIMIT_THREADS_CREATE_PER_TIME", "1", 1);
-#else
-	_putenv("LIMIT_THREADS_FREE=1");
-	_putenv("LIMIT_THREADS_CREATE_PER_TIME=1");
-#endif
-
+		
 	/* Creat a task pool */
 	hp = stpool_create(50,  /* max servering threads */
 			           0,   /* 0 servering threads that reserved for waiting for tasks */
@@ -89,7 +81,7 @@ int main()
 	while ('q' != getchar()) {
 		for (i=0; i<40; i++)
 			stpool_add_routine(hp, "debug", task_run, NULL, &sum, NULL);	
-		usleep(20);
+		msleep(1);
 	}
 
 	/* Clear the stdio cache */
